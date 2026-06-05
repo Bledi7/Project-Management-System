@@ -1,0 +1,21 @@
+{
+  "name": "pm-project",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": [
+    "frontend",
+    "backend",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=frontend\" \"npm run dev --workspace=backend\"",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "sass-embedded": "^1.99.0"
+  }
+}

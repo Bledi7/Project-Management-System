@@ -1,0 +1,96 @@
+
+.input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.input-control {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  background: #fff;
+  color: #1e293b;
+  transition: all 0.2s ease;
+
+  &::placeholder {
+    color: #94a3b8;
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--color-primary-400);
+    box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.2);
+  }
+}
+
+.has-error {
+  border-color: #f87171;
+
+  &:focus-visible {
+    border-color: #f87171;
+    box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.2);
+  }
+}
+
+.size-sm {
+  padding: 0;
+  font-size: 0.875rem;
+}
+
+.size-md {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.size-lg {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.with-prefix {
+  padding-left: 2.5rem;
+}
+
+.without-prefix {
+  padding-left: 0.75rem;
+}
+
+.with-suffix {
+  padding-right: 2.5rem;
+}
+
+.without-suffix {
+  padding-right: 0.75rem;
+}
+
+.is-disabled {
+  background: #f8fafc;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.input-slot {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.prefix-slot {
+  left: 0.75rem;
+}
+
+.suffix-slot {
+  right: 0.75rem;
+}
+
+.error-text {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #ef4444;
+}

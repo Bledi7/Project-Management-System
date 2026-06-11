@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum Role {
+  ADMIN
+  PRODUCT_OWNER
+  DEVELOPER
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  REJECTED
+}
+
+enum PriorityStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model Team {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(255)
+  created_by Int
+  created_at DateTime @default(now())
+
+  // A team is created by one user (NoAction avoids circular FK issue)
+  creator    User       @relation("TeamCreator", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  // A team has many members
+  members    User[]     @relation("TeamMembers")
+  reports    Report[]
+  priorities Priority[]
+
+  @@map("team")
+}
+
+model User {
+  id         Int        @id @default(autoincrement())
+  name       String     @db.VarChar(255)
+  email      String     @unique @db.VarChar(255)
+  password   String     @db.VarChar(255)
+  role       Role       @default(DEVELOPER)
+  status     UserStatus @default(PENDING)
+  team_id    Int?
+  created_at DateTime   @default(now())
+
+  // A user belongs to one team (nullable — user can exist without team)
+  team              Team?      @relation("TeamMembers", fields: [team_id], references: [id], onDelete: SetNull)
+  // Teams this user created
+  createdTeams      Team[]     @relation("TeamCreator")
+  reports           Report[]
+  createdPriorities Priority[]
+
+  @@map("user")
+}
+
+model Report {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  description String   @db.Text
+  user_id     Int
+  team_id     Int
+  created_at  DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [team_id], references: [id], onDelete: Cascade)
+
+  @@map("report")
+}
+
+model Priority {
+  id               Int            @id @default(autoincrement())
+  title            String         @db.VarChar(255)
+  status           PriorityStatus @default(TODO)
+  created_by       Int
+  team_id          Int
+  created_at       DateTime       @default(now())
+  jira_issue_key   String?        @unique @db.VarChar(50)
+  jira_project_key String?        @db.VarChar(50)
+  assignee_label   String?        @db.VarChar(255)
+
+  creator User @relation(fields: [created_by], references: [id], onDelete: Cascade)
+  team    Team @relation(fields: [team_id], references: [id], onDelete: Cascade)
+
+  @@map("priority")
+}
